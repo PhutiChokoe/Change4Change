@@ -43,6 +43,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.0.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.6\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -81,6 +89,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
@@ -140,12 +150,30 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
+    <Content Include="CreateDream.aspx" />
+    <Content Include="Database\Change.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Change.Context.cs</LastGenOutput>
+      <DependentUpon>Change.edmx</DependentUpon>
+    </Content>
+    <Content Include="Database\Change.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Change.edmx</DependentUpon>
+      <LastGenOutput>Change.cs</LastGenOutput>
+    </Content>
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EntityDeploy Include="Database\Change.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Change.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Database\Change.edmx.diagram">
+      <DependentUpon>Change.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -212,6 +240,53 @@
     <Compile Include="Contact.aspx.designer.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
+    <Compile Include="CreateDream.aspx.cs">
+      <DependentUpon>CreateDream.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CreateDream.aspx.designer.cs">
+      <DependentUpon>CreateDream.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Allocation.cs">
+      <DependentUpon>Change.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Change.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Change.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Change.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Change.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Change.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Change.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Dbhandler.cs" />
+    <Compile Include="Database\ErrorLog.cs">
+      <DependentUpon>Change.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Idbhandler.cs" />
+    <Compile Include="Database\IErrorLog.cs" />
+    <Compile Include="Database\Investment.cs">
+      <DependentUpon>Change.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\IUser.cs" />
+    <Compile Include="Database\LogErrors.cs" />
+    <Compile Include="Database\MySession.cs" />
+    <Compile Include="Database\RunningBalance.cs">
+      <DependentUpon>Change.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Transaction.cs">
+      <DependentUpon>Change.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\User.cs">
+      <DependentUpon>Change.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Users.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -245,7 +320,9 @@
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

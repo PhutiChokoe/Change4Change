@@ -1,0 +1,449 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Change4ChangeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Allocation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AllocatedUserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AllocatedUserInvestmentId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AllocatingUserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ExpiryDate" Type="datetime" Nullable="false" />
+          <Property Name="Paid" Type="bit" />
+        </EntityType>
+        <EntityType Name="ErrorLogs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModuleName" Type="varchar" MaxLength="255" />
+          <Property Name="pageName" Type="varchar" MaxLength="255" />
+          <Property Name="procedureName" Type="varchar(max)" />
+          <Property Name="Exception" Type="varchar(max)" />
+          <Property Name="UserId" Type="uniqueidentifier" />
+          <Property Name="UserName" Type="varchar" MaxLength="25" />
+        </EntityType>
+        <EntityType Name="Investment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Duration" Type="int" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="MatureDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RunningBalances">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="TransactionId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="DateInserted" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="EntryType" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="AllocatedId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="IsBlocked" Type="bit" Nullable="false" />
+          <Property Name="BlockedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="Password" Type="varchar(max)" Nullable="false" />
+          <Property Name="Email" Type="varchar(max)" Nullable="false" />
+          <Property Name="FailedLoginCount" Type="int" />
+          <Property Name="LoginCount" Type="int" />
+          <Property Name="DateModified" Type="datetime" />
+          <Property Name="LastModifiedBy" Type="uniqueidentifier" />
+          <Property Name="OldPassword" Type="nvarchar" MaxLength="255" />
+          <Property Name="LastDatePasswordChanged" Type="datetime" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LastLogin" Type="datetime" />
+        </EntityType>
+        <Association Name="FK__Change_Al__Alloc__1367E606">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Allocation" Type="Self.Allocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Allocation">
+              <PropertyRef Name="AllocatedUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Change_Al__Alloc__145C0A3F">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Allocation" Type="Self.Allocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Allocation">
+              <PropertyRef Name="AllocatedUserInvestmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Change_Al__Alloc__15502E78">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Allocation" Type="Self.Allocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Allocation">
+              <PropertyRef Name="AllocatingUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ErrorLogs__UserI__267ABA7A">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="ErrorLogs" Type="Self.ErrorLogs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ErrorLogs">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvestmentUser">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Investment" Type="Self.Investment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Investment">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Change4ChangeModelStoreContainer">
+          <EntitySet Name="Allocation" EntityType="Self.Allocation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ErrorLogs" EntityType="Self.ErrorLogs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Investment" EntityType="Self.Investment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RunningBalances" EntityType="Self.RunningBalances" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Transaction" EntityType="Self.Transaction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Change_Al__Alloc__1367E606" Association="Self.FK__Change_Al__Alloc__1367E606">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Allocation" EntitySet="Allocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Change_Al__Alloc__145C0A3F" Association="Self.FK__Change_Al__Alloc__145C0A3F">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Allocation" EntitySet="Allocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Change_Al__Alloc__15502E78" Association="Self.FK__Change_Al__Alloc__15502E78">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Allocation" EntitySet="Allocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ErrorLogs__UserI__267ABA7A" Association="Self.FK__ErrorLogs__UserI__267ABA7A">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="ErrorLogs" EntitySet="ErrorLogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvestmentUser" Association="Self.FK_InvestmentUser">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Investment" EntitySet="Investment" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Change4ChangeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Allocation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="AllocatedUserId" Type="Guid" Nullable="false" />
+          <Property Name="AllocatedUserInvestmentId" Type="Guid" Nullable="false" />
+          <Property Name="AllocatingUserId" Type="Guid" Nullable="false" />
+          <Property Name="ExpiryDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Paid" Type="Boolean" />
+          <NavigationProperty Name="User" Relationship="Self.FK__Change_Al__Alloc__1367E606" FromRole="Allocation" ToRole="Users" />
+          <NavigationProperty Name="User1" Relationship="Self.FK__Change_Al__Alloc__145C0A3F" FromRole="Allocation" ToRole="Users" />
+          <NavigationProperty Name="User2" Relationship="Self.FK__Change_Al__Alloc__15502E78" FromRole="Allocation" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Investment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="Duration" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="MatureDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="User" Relationship="Self.FK_InvestmentUser" FromRole="Investment" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="RunningBalance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="TransactionId" Type="Guid" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="DateInserted" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="EntryType" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="AllocatedId" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="IsBlocked" Type="Boolean" Nullable="false" />
+          <Property Name="BlockedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FailedLoginCount" Type="Int32" />
+          <Property Name="LoginCount" Type="Int32" />
+          <Property Name="DateModified" Type="DateTime" Precision="3" />
+          <Property Name="LastModifiedBy" Type="Guid" />
+          <Property Name="OldPassword" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="LastDatePasswordChanged" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LastLogin" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Allocations" Relationship="Self.FK__Change_Al__Alloc__1367E606" FromRole="Users" ToRole="Allocation" />
+          <NavigationProperty Name="Allocations1" Relationship="Self.FK__Change_Al__Alloc__145C0A3F" FromRole="Users" ToRole="Allocation" />
+          <NavigationProperty Name="Allocations2" Relationship="Self.FK__Change_Al__Alloc__15502E78" FromRole="Users" ToRole="Allocation" />
+          <NavigationProperty Name="Investments" Relationship="Self.FK_InvestmentUser" FromRole="Users" ToRole="Investment" />
+          <NavigationProperty Name="ErrorLogs" Relationship="Change4ChangeModel.FK__ErrorLogs__UserI__267ABA7A" FromRole="User" ToRole="ErrorLog" />
+        </EntityType>
+        <Association Name="FK__Change_Al__Alloc__1367E606">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Allocation" Type="Self.Allocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Allocation">
+              <PropertyRef Name="AllocatedUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Change_Al__Alloc__145C0A3F">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Allocation" Type="Self.Allocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Allocation">
+              <PropertyRef Name="AllocatedUserInvestmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Change_Al__Alloc__15502E78">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Allocation" Type="Self.Allocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Allocation">
+              <PropertyRef Name="AllocatingUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvestmentUser">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Investment" Type="Self.Investment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Investment">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Change4ChangeEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Allocations" EntityType="Self.Allocation" />
+          <EntitySet Name="Investments" EntityType="Self.Investment" />
+          <EntitySet Name="RunningBalances" EntityType="Self.RunningBalance" />
+          <EntitySet Name="Transactions" EntityType="Self.Transaction" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK__Change_Al__Alloc__1367E606" Association="Self.FK__Change_Al__Alloc__1367E606">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Allocation" EntitySet="Allocations" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Change_Al__Alloc__145C0A3F" Association="Self.FK__Change_Al__Alloc__145C0A3F">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Allocation" EntitySet="Allocations" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Change_Al__Alloc__15502E78" Association="Self.FK__Change_Al__Alloc__15502E78">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Allocation" EntitySet="Allocations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvestmentUser" Association="Self.FK_InvestmentUser">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Investment" EntitySet="Investments" />
+          </AssociationSet>
+          <EntitySet Name="ErrorLogs" EntityType="Change4ChangeModel.ErrorLog" />
+          <AssociationSet Name="FK__ErrorLogs__UserI__267ABA7A" Association="Change4ChangeModel.FK__ErrorLogs__UserI__267ABA7A">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ErrorLog" EntitySet="ErrorLogs" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ErrorLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="ModuleName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="pageName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="procedureName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Exception" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="UserId" Type="Guid" />
+          <Property Name="UserName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="User" Relationship="Change4ChangeModel.FK__ErrorLogs__UserI__267ABA7A" FromRole="ErrorLog" ToRole="User" />
+        </EntityType>
+        <Association Name="FK__ErrorLogs__UserI__267ABA7A">
+          <End Type="Change4ChangeModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="Change4ChangeModel.ErrorLog" Role="ErrorLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ErrorLog">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Change4ChangeModelStoreContainer" CdmEntityContainer="Change4ChangeEntities">
+          <EntitySetMapping Name="Allocations">
+            <EntityTypeMapping TypeName="Change4ChangeModel.Allocation">
+              <MappingFragment StoreEntitySet="Allocation">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AllocatedUserId" ColumnName="AllocatedUserId" />
+                <ScalarProperty Name="AllocatedUserInvestmentId" ColumnName="AllocatedUserInvestmentId" />
+                <ScalarProperty Name="AllocatingUserId" ColumnName="AllocatingUserId" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="Paid" ColumnName="Paid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Investments">
+            <EntityTypeMapping TypeName="Change4ChangeModel.Investment">
+              <MappingFragment StoreEntitySet="Investment">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="MatureDate" ColumnName="MatureDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RunningBalances">
+            <EntityTypeMapping TypeName="Change4ChangeModel.RunningBalance">
+              <MappingFragment StoreEntitySet="RunningBalances">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="DateInserted" ColumnName="DateInserted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transactions">
+            <EntityTypeMapping TypeName="Change4ChangeModel.Transaction">
+              <MappingFragment StoreEntitySet="Transaction">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="EntryType" ColumnName="EntryType" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="AllocatedId" ColumnName="AllocatedId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="Change4ChangeModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+                <ScalarProperty Name="BlockedDate" ColumnName="BlockedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="FailedLoginCount" ColumnName="FailedLoginCount" />
+                <ScalarProperty Name="LoginCount" ColumnName="LoginCount" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
+                <ScalarProperty Name="OldPassword" ColumnName="OldPassword" />
+                <ScalarProperty Name="LastDatePasswordChanged" ColumnName="LastDatePasswordChanged" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ErrorLogs">
+            <EntityTypeMapping TypeName="Change4ChangeModel.ErrorLog">
+              <MappingFragment StoreEntitySet="ErrorLogs">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Exception" ColumnName="Exception" />
+                <ScalarProperty Name="procedureName" ColumnName="procedureName" />
+                <ScalarProperty Name="pageName" ColumnName="pageName" />
+                <ScalarProperty Name="ModuleName" ColumnName="ModuleName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
